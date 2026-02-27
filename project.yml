@@ -12,6 +12,8 @@ targets:
         excludes:
           - "README.md"
           - "project.yml"
+          - "ZentiScan.xcodeproj"
+          - ".gitignore"
     info:
       path: Info.plist
       properties:

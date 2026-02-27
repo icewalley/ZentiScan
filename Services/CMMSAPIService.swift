@@ -51,6 +51,9 @@ extension APIManager {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(payload)
@@ -82,6 +85,9 @@ extension APIManager {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let encoder = JSONEncoder()
         request.httpBody = try encoder.encode(registrering)
@@ -99,8 +105,9 @@ extension APIManager {
 
     private func fetch<T: Decodable>(url: URL) async throws -> T {
         var request = URLRequest(url: url)
-        // Add auth token if available (Mocked for now)
-        request.setValue("Bearer YOUR_IOS_TOKEN", forHTTPHeaderField: "Authorization")
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -124,7 +131,9 @@ extension APIManager {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer YOUR_IOS_TOKEN", forHTTPHeaderField: "Authorization")
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         let (data, response) = try await URLSession.shared.data(for: request)
 

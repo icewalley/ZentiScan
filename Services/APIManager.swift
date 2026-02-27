@@ -13,7 +13,7 @@ class APIManager: ObservableObject {
     // CHANGE THIS to your Mac's local IP if testing on real device
     // e.g., "http://192.168.1.150:3000/api"
     // For Simulator, localhost usually works
-    let baseURL = "http://localhost:3000/api"
+    private let baseURL = "http://localhost:3000/api"
 
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -37,7 +37,12 @@ class APIManager: ObservableObject {
             throw URLError(.badURL)
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw URLError(.badServerResponse)
@@ -54,6 +59,9 @@ class APIManager: ObservableObject {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         request.httpBody = try JSONEncoder().encode(registration)
 
         let (_, response) = try await URLSession.shared.data(for: request)
@@ -74,6 +82,9 @@ class APIManager: ObservableObject {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = KeychainManager.shared.getToken() {
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         urlRequest.timeoutInterval = 30  // Allow time for AI processing
 
         urlRequest.httpBody = try encoder.encode(request)
@@ -106,6 +117,9 @@ class APIManager: ObservableObject {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = KeychainManager.shared.getToken() {
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         urlRequest.timeoutInterval = 20
 
         let requestBody = GenerateChecklistRequest(
@@ -143,7 +157,12 @@ class APIManager: ObservableObject {
             throw URLError(.badURL)
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw URLError(.badServerResponse)
@@ -161,7 +180,12 @@ class APIManager: ObservableObject {
             throw URLError(.badURL)
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        if let token = KeychainManager.shared.getToken() {
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
+
+        let (data, response) = try await URLSession.shared.data(for: request)
 
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
             throw URLError(.badServerResponse)
@@ -179,6 +203,9 @@ class APIManager: ObservableObject {
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let token = KeychainManager.shared.getToken() {
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
         urlRequest.httpBody = try encoder.encode(results)
 
         let (data, response) = try await URLSession.shared.data(for: urlRequest)
