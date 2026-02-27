@@ -2,7 +2,10 @@ name: ZentiScan
 options:
   bundleIdPrefix: no.zenti
   deploymentTarget:
-    iOS: "17.0"
+    iOS: 17.0
+    macOS: 14.0
+  settings:
+    SWIFT_VERSION: 5.9
 targets:
   ZentiScan:
     type: application
